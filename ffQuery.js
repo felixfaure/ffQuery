@@ -159,7 +159,6 @@ Window.print()
   }
 
   //Ajax
-  //Ajax
   function ajax(args) {
     // args { url, params, json, method, before, success, error, always }
     // For POST args.params must be a formData
@@ -211,7 +210,7 @@ Window.print()
 
   global.$ = $;
   global.$$ = $$;
-  global.ffquery = {
+  global.ff = {
     "toArray": toArray,
     "siblings": siblings,
     "ajax": ajax

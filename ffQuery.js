@@ -159,14 +159,20 @@ Window.print()
   }
 
   //Ajax
+  //Ajax
   function ajax(args) {
     // args { url, params, json, method, before, success, error, always }
+    // For POST args.params must be a formData
     if(args.before) {
       args.before();
     }
-    args.params = args.params ? ((args.url.indexOf('?') === -1 ? '?' : '&') + args.params) : '';
     var request = new XMLHttpRequest();
-    request.open(args.method, encodeURI(args.url + args.params), true);
+    if(args.method.toLowerCase() == "post") {
+      request.open(args.method, args.url, true);
+    } else {
+      args.params = args.params ? ((args.url.indexOf('?') === -1 ? '?' : '&') + args.params) : '';
+      request.open(args.method, encodeURI(args.url + args.params), true);
+    }
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
@@ -196,7 +202,11 @@ Window.print()
         args.always(false);
       }
     };
-    request.send();
+    if(args.method.toLowerCase() == "post") {
+      request.send(args.params);
+    } else {
+      request.send();
+    }
   }
 
   global.$ = $;

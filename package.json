@@ -1,0 +1,30 @@
+{
+    "name": "ffQuery",
+    "version": "2.0.0",
+    "description": "Mini jQuery",
+    "main": "ffQuery.js",
+    "scripts": {
+        "uglify": "uglifyjs ./ffQuery.js -o ./ffQuery.min.js --comments -m -c",
+        "build": "npm run uglify"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/felixfaure/ffQuery.git"
+    },
+    "keywords": [
+        "js",
+        "minimal",
+        "jquery",
+        "ffQuery",
+        "felixfaure"
+    ],
+    "author": "David Félix-Faure <contact@felixfaure.fr> (http://www.felixfaure.fr)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/felixfaure/ffQuery/issues"
+    },
+    "homepage": "http://felixfaure.github.io/ffQuery/",
+    "devDependencies": {
+        "uglify-js": "^2.4.24"
+    }
+}

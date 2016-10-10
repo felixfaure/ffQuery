@@ -24,9 +24,10 @@
                     <li><a href="#nowhere" title="Praesent">Praesent</a></li>
                 </ul>
             </nav>
+            <p>paragraphe dans le header</p>
         </header><!-- #header -->
 
-        <main id="main" class="main" role="main">
+        <main id="main" class="main" role="main" data-test="Yeah !">
             <h1>Titre H1</h1>
             <h2>Titre H2</h2>
             <h3>Titre H3</h3>
@@ -36,7 +37,7 @@
             <h6>Titre H6</h6>
             <h6>Titre H6</h6>
             <h6>Titre H6</h6>
-            <h6 class="green">Titre H6</h6>
+            <h6 class="smaller">Titre H6</h6>
             <h6>Titre H6</h6>
             <h6>Titre H6</h6>
             <h6>Titre H6</h6>
@@ -48,7 +49,7 @@
             <p class="biggest">Paragraphe en biggest</p>
 			<p class="smallest">Paragraphe en smallest</p>
             <p class="smaller">Paragraphe en smaller</p>
-            <p class="small">Paragraphe en small</p>
+            <p class="smaller">Paragraphe en small</p>
             <p id="specialp">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet nisi auctor, malesuada libero in, tristique tellus.</p>
             <h1>Titre H1</h1>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit amet nisi auctor, malesuada libero in, tristique tellus. Pellentesque porttitor, arcu nec aliquam commodo, tortor lacus lacinia lacus, in feugiat mauris tortor at velit. Fusce eu lectus tempor, rhoncus metus quis, congue erat. Nullam adipiscing vitae erat ut egestas. Quisque vulputate ligula vel mi vulputate pretium.</p>
@@ -84,76 +85,81 @@
 		</main><!-- #main -->
     <script src="ffQuery.js"></script>
     <script type="text/javascript">
-      var main = $('#main'),
-          nav = $('#primaryNav');
+      //Closest & matches polyfills
+      (function (ELEMENT) {
+      	ELEMENT.matches = ELEMENT.matches || ELEMENT.mozMatchesSelector || ELEMENT.msMatchesSelector || ELEMENT.oMatchesSelector || ELEMENT.webkitMatchesSelector || function matches(selector) {
+      		var element = this,
+      		elements = (element.document || element.ownerDocument).querySelectorAll(selector),
+      		index = 0;
+      		while (elements[index] && elements[index] !== element) {
+      			++index;
+      		}
+      		return elements[index] ? true : false;
+      	};
 
-      //Exemple de sélections
-      //==================================================
-      //Sélection classique de plusieurs éléments
-      $$('p').forEach(function(el, idx) {
-        el.style.color = "red";
-        el.classList.add("anotherclass");
-        el.setAttribute("data-test",true);
-        el.id = 'p_'+idx;
+      	ELEMENT.closest = ELEMENT.closest || function closest(selector) {
+      		var element = this;
+      		while (element) {
+      			if (element.matches(selector)) {
+      				break;
+      			}
+      			element = element.parentElement;
+      		}
+      		return element;
+      	};
+      }(Element.prototype));
+
+
+      $(function(){
+        var w = $(window),
+            d = document,
+            html = $('html'),
+            body = $('body'),
+            main = $('#main'),
+            nav = $('#primaryNav'),
+            paragraphs = $('p',main),
+            classes = $('.smaller'),
+            div = $('<div class="taMere"><span>test</span> srgtes</div>'),
+            noExist = $('.qsfergdthrsqer'),
+            windowH,
+            windowW,
+            scrollT;
+
+        // Selection :
+        // console.log(w,html,body,main,nav,paragraphs,classes,div,noExist);
+
+        // Divers :
+        // $.each(['un','deux','trois'],function(el,i){ console.log(el,i); });
+        // console.log($.parseHTML('<div class="taMere"><span>test</span> srgtes</div>'));
+        // console.log($.isFunction(Math.max),$.isString('fdgjyft'),$.isArray([1,2]),$.isNumeric(1.6));
+        // console.log($.merge(paragraphs, div));
+        // console.log($.unique(paragraphs));
+        // console.log($.matches(main[0],'main'));
+
+        // Collection :
+        // console.log(paragraphs.add(classes).add(div).add('<span class="test"></span>'));
+        // paragraphs.each(function(el, index) {
+        //   console.log(el,index);
+        // });
+        // console.log(paragraphs.get(),paragraphs.get(2));
+        // console.log(paragraphs.first());
+        // console.log(paragraphs.last());
+        // console.log(paragraphs.filter('.smaller'));
+        // console.log(paragraphs.filter(function(el,i){ return $(el).index() == 20; }));
+        // console.log(paragraphs.eq(2).index());
+        // console.log(paragraphs.index($('.biggest')));
+        // console.log(noExist.filter('.smaller').first());
+
+        // Traversal :
+        //...
+
+        //...
+
+        // Datas :
+        // console.log(main.data('test','Nooooo !'));
+        // console.log(main.removeData('test'));
+        // console.log(main.data('test'));
       });
-      //Sélection seulement du premier élément
-      $('p').style.color = "blue";
-      //Sélection d'un élément dans un containeur
-      $('.biggest',main).style.color = "orange";
-      //Autres
-      // $('#p_1',main).previousElementSibling
-      // $('#p_1',main).nextElementSibling
-      // $('ul',nav).children
-      // main.firstChild
-      // main.lastChild
-      // main.parentNode
-      // $('#p_1',main).closest('main')
-      // ffquery.siblings($('#p_1',main));
-
-      //Autres
-      //==================================================
-      //Filter
-      var pBig = $$('h6').filter(function(el, idx) {
-        return el.classList.contains("green");
-      }).forEach(function(el, idx) {
-        el.style.color = "green";
-        el.style.fontSize = "40px";
-      });
-      //Utilisation d'un méthode qui retourne un nodeList (children), utilisation de la fonction toArray pour le convertire en tableau
-      ffquery.toArray($('ul',nav).children).forEach(function(el, idx) {
-        el.innerHTML = '<strong>'+el.textContent+'</strong>';
-      });
-      $('ul',nav).outerHTML = '<ol>'+$('ul',nav).innerHTML+'</ol>';
-
-      //Exemples de manipulations
-      //==================================================
-      $('#p_1',main).previousElementSibling.textContent = "Un texte !";
-      $('#p_2',main).remove();
-      $('#p_3',main).innerHTML = '';
-      $('#p_6',main).insertAdjacentHTML('beforebegin', '<p>beforebegin</p>');
-      $('#p_6',main).insertAdjacentHTML('afterbegin', '<strong>afterbegin</strong><br>');
-      $('#p_6',main).insertAdjacentHTML('beforeend', '<br><strong>beforeend</strong>');
-      $('#p_6',main).insertAdjacentHTML('afterend', '<p>afterend</p>');
-      $('#p_4',main).nextElementSibling.outerHTML = "<ul><li>Item</li><li>Item</li><li>Item</li><li>Item</li></ul>";
-      main.appendChild($('#p_0',main)); //append
-      main.insertBefore($('#p_1',main),main.firstChild); //prepende
-      main.insertBefore($('#p_4',main),$('#p_1',main)); //before
-      main.insertBefore($('#p_8',main),$('#p_4',main).nextElementSibling); //after
-
-      //Styles, dimensions
-      //==================================================
-      var padTop = getComputedStyle(main).getPropertyValue("padding-top");
-      var rect = $('#p_7',main).getBoundingClientRect();
-      var dims = {
-        top: rect.top + document.body.scrollTop,
-        left: rect.left + document.body.scrollLeft,
-        outerHeight: $('#p_7',main).offsetHeight,
-        outerWidth: $('#p_7',main).offsetWidth,
-        offsetLeft: $('#p_7',main).offsetLeft,
-        offsetTop: $('#p_7',main).offsetTop,
-        offsetLeftViewport: rect.left,
-        offsetTopViewport: rect.top,
-      };
     </script>
     </body>
 </html>

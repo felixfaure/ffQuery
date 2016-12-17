@@ -262,7 +262,7 @@
     closest: function (selector) {
       var elems = [];
       this.each(function (el) {
-        push.apply(elems, el.closest(selector));
+        push.apply(elems, ffQuery(el.closest(selector)));
       });
       return unique(elems);
     },
@@ -324,7 +324,7 @@
       this.each(function (item) {
         last = item;
 
-        while (last !== doc.body.parentNode) {
+        while (last !== d.body.parentNode) {
           last = last.parentElement;
 
           if (!selector || (selector && matches(last, selector))) {
@@ -339,9 +339,9 @@
     siblings: function () {
       var collection = this.parent().children(), el = this[0];
 
-      return filter.call(collection, function (i) {
+      return ffQuery(filter.call(collection, function (i) {
         return i !== el;
-      });
+      }));
     }
 
   });
@@ -718,14 +718,17 @@
   }
 
   function removeEvent(node, eventName, callback) {
-    var eventCache = getData(node, "_ffQueryEvents")[eventName];
     if (callback) {
       node.removeEventListener(eventName, callback);
     } else {
-      each(eventCache, function (event) {
-        node.removeEventListener(eventName, event);
-      });
-      eventCache = [];
+      var eventData = getData(node, "_ffQueryEvents");
+      if(eventData) {
+        var eventCache = getData(node, "_ffQueryEvents")[eventName];
+        each(eventCache, function (event) {
+          node.removeEventListener(eventName, event);
+        });
+        eventCache = [];
+      }
     }
   }
 
